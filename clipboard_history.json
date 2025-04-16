@@ -1,0 +1,122 @@
+[
+  {
+    "text": "generate a mockup of this poster",
+    "type": "text"
+  },
+  {
+    "text": "i want to create a poster about my hair products (afro aura)that asks people about their experiences with the products, the products include, shampoo, treatment, oils, conditioners. give me some concepts about this",
+    "type": "text"
+  },
+  {
+    "text": "https://images.squarespace-cdn.com/content/v1/607f89e638219e13eee71b1e/1684821560422-SD5V37BAG28BURTLIXUQ/michael-sum-LEpfefQf4rU-unsplash.jpg",
+    "type": "url"
+  },
+  {
+    "text": "file:///home/guest/Pictures/wasp.png",
+    "type": "text"
+  },
+  {
+    "text": "https://cdn.britannica.com/70/234870-050-D4D024BB/Orange-colored-cat-yawns-displaying-teeth.jpg",
+    "type": "url"
+  },
+  {
+    "text": "4. Actions\nButtons below:\n\n\u2705 Apply\n\n\u274c Cancel\n\n\ud83d\udd04 Revert\n\n\ud83e\uddea Apply Transformation (e.g. UPPERCASE, strip, etc.)",
+    "type": "text"
+  },
+  {
+    "text": "4. Actions\nButtons below:\n\n\u2705 Apply\n\n\u274c Cancel\n\n\ud83d\udd04 Revert yoooooo\n\n\ud83e\uddea Apply Transformation (e.g. UPPERCASE, strip, etc.)",
+    "type": "text"
+  },
+  {
+    "text": "4. Actions\nButtons below:\n\n\u2705 Apply\n\n\u274c Cancel\n\n\ud83d\udd04 Revert\n\n\ud83e\uddea Apply Transformation (e.g. UPPERCASE, strip, etc.)",
+    "type": "text"
+  },
+  {
+    "text": "FROM PYQT5.QTWIDGETS IMPORT ( QDIALOG, QVBOXLAYOUT, QHBOXLAYOUT, QTEXTEDIT, QPUSHBUTTON ) FROM PYQT5.QTCORE IMPORT QT IMPORT MARKDOWN CLASS PREVIEWTRANSFORMDIALOG(QDIALOG): DEF __INIT__(SELF, ORIGINAL_TEXT, TRANSFORM_FN, CALLBACK): SUPER().__INIT__() SELF.SETWINDOWTITLE(\"\ud83d\udee0 PREVIEW & TRANSFORM\") SELF.SETMINIMUMSIZE(800, 500) SELF.ORIGINAL_TEXT = ORIGINAL_TEXT SELF.TRANSFORM_FN = TRANSFORM_FN SELF.CALLBACK = CALLBACK SELF.EDITOR = QTEXTEDIT() SELF.EDITOR.SETTEXT(ORIGINAL_TEXT) SELF.PREVIEW = QTEXTEDIT() SELF.PREVIEW.SETREADONLY(TRUE) # LAYOUT SETUP MAIN_LAYOUT = QVBOXLAYOUT() SPLIT_LAYOUT = QHBOXLAYOUT() BUTTON_LAYOUT = QHBOXLAYOUT() SPLIT_LAYOUT.ADDWIDGET(SELF.EDITOR) SPLIT_LAYOUT.ADDWIDGET(SELF.PREVIEW) SELF.APPLY_BTN = QPUSHBUTTON(\"\u2705 APPLY\") SELF.CANCEL_BTN = QPUSHBUTTON(\"\u274c CANCEL\") SELF.REVERT_BTN = QPUSHBUTTON(\"\ud83d\udd04 REVERT\") SELF.TRANSFORM_BTN = QPUSHBUTTON(\"\ud83e\uddea APPLY TRANSFORMATION\") SELF.APPLY_BTN.CLICKED.CONNECT(SELF.APPLY) SELF.CANCEL_BTN.CLICKED.CONNECT(SELF.REJECT) SELF.REVERT_BTN.CLICKED.CONNECT(SELF.REVERT) SELF.TRANSFORM_BTN.CLICKED.CONNECT(SELF.UPDATE_PREVIEW) BUTTON_LAYOUT.ADDSTRETCH() BUTTON_LAYOUT.ADDWIDGET(SELF.REVERT_BTN) BUTTON_LAYOUT.ADDWIDGET(SELF.TRANSFORM_BTN) BUTTON_LAYOUT.ADDWIDGET(SELF.CANCEL_BTN) BUTTON_LAYOUT.ADDWIDGET(SELF.APPLY_BTN) MAIN_LAYOUT.ADDLAYOUT(SPLIT_LAYOUT) MAIN_LAYOUT.ADDLAYOUT(BUTTON_LAYOUT) SELF.SETLAYOUT(MAIN_LAYOUT) SELF.UPDATE_PREVIEW() SELF.SETSTYLESHEET(\"\"\" QTEXTEDIT { FONT-FAMILY: CONSOLAS, MONOSPACE; FONT-SIZE: 13PX; BACKGROUND-COLOR: #1E1E1E; COLOR: #EEEEEE; BORDER: 1PX SOLID #444; BORDER-RADIUS: 4PX; PADDING: 6PX; } QPUSHBUTTON { PADDING: 8PX 14PX; FONT-SIZE: 13PX; FONT-WEIGHT: BOLD; BORDER-RADIUS: 6PX; } \"\"\") DEF UPDATE_PREVIEW(SELF): EDITED = SELF.EDITOR.TOPLAINTEXT() TRANSFORMED = SELF.TRANSFORM_FN(EDITED) RENDERED_HTML = MARKDOWN.MARKDOWN(TRANSFORMED) SELF.PREVIEW.SETHTML(RENDERED_HTML) DEF REVERT(SELF): SELF.EDITOR.SETTEXT(SELF.ORIGINAL_TEXT) SELF.UPDATE_PREVIEW() DEF APPLY(SELF): FINAL_TEXT = SELF.TRANSFORM_FN(SELF.EDITOR.TOPLAINTEXT()) SELF.CALLBACK(FINAL_TEXT) SELF.ACCEPT()",
+    "type": "text"
+  },
+  {
+    "text": "4. Actions\nButtons below:\n\n\u2705 Apply\n\n\u274c Cancel\n\n\ud83d\udd04 Revert\n\n\ud83e\uddea Apply Transformation (e.g. UPPERCASE, strip, etc.)",
+    "type": "text"
+  },
+  {
+    "text": "from PyQt5.QtWidgets import (\n    QDialog, QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton\n)\nfrom PyQt5.QtCore import Qt\nimport markdown\n\n\nclass PreviewTransformDialog(QDialog):\n    def __init__(self, original_text, transform_fn, callback):\n        super().__init__()\n        self.setWindowTitle(\"\ud83d\udee0 Preview & Transform\")\n        self.setMinimumSize(800, 500)\n\n        self.original_text = original_text\n        self.transform_fn = transform_fn\n        self.callback = callback\n\n        self.editor = QTextEdit()\n        self.editor.setText(original_text)\n\n        self.preview = QTextEdit()\n        self.preview.setReadOnly(True)\n\n        # Layout setup\n        main_layout = QVBoxLayout()\n        split_layout = QHBoxLayout()\n        button_layout = QHBoxLayout()\n\n        split_layout.addWidget(self.editor)\n        split_layout.addWidget(self.preview)\n\n        self.apply_btn = QPushButton(\"\u2705 Apply\")\n        self.cancel_btn = QPushButton(\"\u274c Cancel\")\n        self.revert_btn = QPushButton(\"\ud83d\udd04 Revert\")\n        self.transform_btn = QPushButton(\"\ud83e\uddea Apply Transformation\")\n\n        self.apply_btn.clicked.connect(self.apply)\n        self.cancel_btn.clicked.connect(self.reject)\n        self.revert_btn.clicked.connect(self.revert)\n        self.transform_btn.clicked.connect(self.update_preview)\n\n        button_layout.addStretch()\n        button_layout.addWidget(self.revert_btn)\n        button_layout.addWidget(self.transform_btn)\n        button_layout.addWidget(self.cancel_btn)\n        button_layout.addWidget(self.apply_btn)\n\n        main_layout.addLayout(split_layout)\n        main_layout.addLayout(button_layout)\n        self.setLayout(main_layout)\n\n        self.update_preview()\n\n        self.setStyleSheet(\"\"\"\n            QTextEdit {\n                font-family: Consolas, monospace;\n                font-size: 13px;\n                background-color: #1e1e1e;\n                color: #eeeeee;\n                border: 1px solid #444;\n                border-radius: 4px;\n                padding: 6px;\n            }\n            QPushButton {\n                padding: 8px 14px;\n                font-size: 13px;\n                font-weight: bold;\n                border-radius: 6px;\n            }\n        \"\"\")\n\n    def update_preview(self):\n        edited = self.editor.toPlainText()\n        transformed = self.transform_fn(edited)\n        rendered_html = markdown.markdown(transformed)\n        self.preview.setHtml(rendered_html)\n\n    def revert(self):\n        self.editor.setText(self.original_text)\n        self.update_preview()\n\n    def apply(self):\n        final_text = self.transform_fn(self.editor.toPlainText())\n        self.callback(final_text)\n        self.accept()\n",
+    "type": "code"
+  },
+  {
+    "text": "4. Actions\nButtons below:\n\n\u2705 Apply\n\n\u274c Cancel\n\n\ud83d\udd04 Revert\n\n\ud83e\uddea Apply Transformation (e.g. UPPERCASE, strip, etc.)",
+    "type": "text"
+  },
+  {
+    "text": "ELIF ACTION == FANCY_ACTION",
+    "type": "text"
+  },
+  {
+    "text": "fancy_action = menu.addAction(\"\ud83e\ude84 Fancy Preview\")",
+    "type": "text"
+  },
+  {
+    "text": "self.open_preview_dialog(original)",
+    "type": "text"
+  },
+  {
+    "text": "elif action == fancy_action:",
+    "type": "text"
+  },
+  {
+    "text": "self.open_preview_dialog(original)",
+    "type": "text"
+  },
+  {
+    "text": "elif action == fancy_action:",
+    "type": "text"
+  },
+  {
+    "text": "fancy_action = menu.addAction(\"\ud83e\ude84 Fancy Preview\")",
+    "type": "text"
+  },
+  {
+    "text": "dialog.exec_()",
+    "type": "text"
+  },
+  {
+    "text": "dialog = PreviewTransformDialog(original_text, self.on_item_selected)",
+    "type": "text"
+  },
+  {
+    "text": "fancy_action = menu.addAction(\"\ud83e\ude84 Fancy Preview\")\n...\nelif action == fancy_action:\n    self.open_preview_dialog(original)\n",
+    "type": "text"
+  },
+  {
+    "text": "fancy_action",
+    "type": "text"
+  },
+  {
+    "text": "show_context_menu",
+    "type": "text"
+  },
+  {
+    "text": "def open_preview_dialog(self, original_text):\n    dialog = PreviewTransformDialog(original_text, self.on_item_selected)\n    dialog.exec_()\n",
+    "type": "code"
+  },
+  {
+    "text": "from preview_transform_dialog import PreviewTransformDialog\n",
+    "type": "code"
+  },
+  {
+    "text": "from PyQt5.QtWidgets import (\n    QDialog, QVBoxLayout, QHBoxLayout, QPlainTextEdit,\n    QTextBrowser, QPushButton, QSplitter\n)\nfrom PyQt5.QtCore import Qt\nimport markdown\n\n\nclass PreviewTransformDialog(QDialog):\n    def __init__(self, original_text, transform_callback):\n        super().__init__()\n        self.setWindowTitle(\"Transform Clipboard Text\")\n        self.setMinimumSize(800, 400)\n        self.transform_callback = transform_callback\n\n        self.text_edit = QPlainTextEdit(original_text)\n        self.text_edit.textChanged.connect(self.update_preview)\n\n        self.preview_browser = QTextBrowser()\n        self.preview_browser.setOpenExternalLinks(True)\n\n        # Initial preview\n        self.update_preview()\n\n        splitter = QSplitter(Qt.Horizontal)\n        splitter.addWidget(self.text_edit)\n        splitter.addWidget(self.preview_browser)\n        splitter.setSizes([400, 400])\n\n        # Apply button\n        self.apply_button = QPushButton(\"Apply Transformation\")\n        self.apply_button.clicked.connect(self.apply)\n\n        layout = QVBoxLayout()\n        layout.addWidget(splitter)\n        layout.addWidget(self.apply_button)\n        self.setLayout(layout)\n\n        self.setStyleSheet(\"\"\"\n            QPlainTextEdit, QTextBrowser {\n                font-family: Consolas, 'Courier New', monospace;\n                font-size: 14px;\n                padding: 8px;\n                background-color: #1e1e1e;\n                color: #ffffff;\n                border: 1px solid #555;\n                border-radius: 6px;\n            }\n            QPushButton {\n                background-color: #3e8e41;\n                color: white;\n                padding: 8px 16px;\n                border-radius: 6px;\n            }\n            QPushButton:hover {\n                background-color: #2e7031;\n            }\n        \"\"\")\n\n    def update_preview(self):\n        text = self.text_edit.toPlainText()\n        html = markdown.markdown(text)\n        self.preview_browser.setHtml(html)\n\n    def apply(self):\n        self.transform_callback(self.text_edit.toPlainText())\n        self.accept()\n",
+    "type": "code"
+  },
+  {
+    "text": "preview_transform_dialog.py",
+    "type": "text"
+  },
+  {
+    "text": "class PreviewTransformDialog(QDialog):",
+    "type": "code"
+  },
+  {
+    "text": "from PyQt5.QtWidgets import (\n    QDialog, QVBoxLayout, QHBoxLayout, QPlainTextEdit,\n    QTextBrowser, QPushButton, QLabel, QSplitter\n)\nfrom PyQt5.QtCore import Qt\nimport markdown",
+    "type": "code"
+  }
+]
