@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV /home/guest/Desktop/dreamache/KlipFusionApp/venv
+set -gx VIRTUAL_ENV /home/guest/Desktop/dreamache/KlipFusionApp/smart-clip-board/venv
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/"bin $PATH

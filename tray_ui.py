@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QSystemTrayIcon, QMenu, QAction, QApplication
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QTimer
 from search_window import SearchWindow
+from datetime import datetime
 
 HISTORY_FILE = "clipboard_history.json"
 MAX_HISTORY = 30
@@ -26,15 +27,26 @@ def detect_content_type(text):
 class ClipboardTray(QSystemTrayIcon):
     def __init__(self):
         super().__init__()
+
         self.setIcon(QIcon.fromTheme("edit-paste"))
         self.setToolTip("Smart Clipboard Manager")
+
+        self.clipboard = QApplication.clipboard()
+        copied_text = self.clipboard.text()
 
         self.menu = QMenu()
         self.setContextMenu(self.menu)
 
-        self.clipboard = QApplication.clipboard()
         self.history = self.load_history()
         self.search_window = None
+        self.activated.connect(self.on_tray_icon_clicked)
+
+        if copied_text.strip():
+            self.history.insert(0, {
+                "text": copied_text,
+                "type": detect_content_type(copied_text),
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            })
 
         self.clipboard.dataChanged.connect(self.on_clipboard_change)
         self.update_menu()
@@ -44,7 +56,11 @@ class ClipboardTray(QSystemTrayIcon):
         text = self.clipboard.text()
         if text and (not self.history or text != self.history[0]["text"]):
             content_type = detect_content_type(text)
-            self.history.insert(0, {"text": text, "type": content_type})
+            self.history.insert(0, {
+                "text": text,
+                "type": content_type,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            })
             self.history = self.history[:MAX_HISTORY]
             self.save_history()
             self.update_menu()
@@ -89,8 +105,14 @@ class ClipboardTray(QSystemTrayIcon):
                 upgraded = []
                 for item in raw_history:
                     if isinstance(item, str):
-                        upgraded.append({"text": item, "type": detect_content_type(item)})
+                        upgraded.append({
+                            "text": item,
+                            "type": detect_content_type(item),
+                            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        })
                     elif isinstance(item, dict) and "text" in item and "type" in item:
+                        if "timestamp" not in item:
+                            item["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         upgraded.append(item)
                 return upgraded
         return []
@@ -98,3 +120,7 @@ class ClipboardTray(QSystemTrayIcon):
     def save_history(self):
         with open(HISTORY_FILE, "w") as f:
             json.dump(self.history, f, indent=2)
+
+    def on_tray_icon_clicked(self, reason):
+        if reason == QSystemTrayIcon.Trigger:  # left click
+            self.open_search_window()

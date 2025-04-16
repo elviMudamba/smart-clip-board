@@ -1,85 +1,102 @@
 from PyQt5.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton
+    QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton, QLabel, QDialog, QSizePolicy
 )
+from PyQt5.QtGui import QFont, QPalette, QColor
 from PyQt5.QtCore import Qt
-import markdown
-
 
 class PreviewTransformDialog(QDialog):
     def __init__(self, original_text, transform_fn, callback):
         super().__init__()
-        self.setWindowTitle("🛠 Preview & Transform")
-        self.setMinimumSize(800, 500)
+        self.setWindowTitle("Preview & Transform")
+        self.setMinimumSize(600, 400)
 
-        self.original_text = original_text
-        self.transform_fn = transform_fn
+        self.original_text = original_text or ""
+        self.transformed_text = transform_fn(self.original_text)
         self.callback = callback
 
-        self.editor = QTextEdit()
-        self.editor.setText(original_text)
+        self.init_ui()
 
-        self.preview = QTextEdit()
-        self.preview.setReadOnly(True)
+    def init_ui(self):
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(15)
 
-        # Layout setup
-        main_layout = QVBoxLayout()
+        # Header labels
+        header_layout = QHBoxLayout()
+        original_label = QLabel("📝 Original")
+        transformed_label = QLabel("✨ Transformed")
+
+        for label in (original_label, transformed_label):
+            label.setFont(QFont("Segoe UI", 12, QFont.Bold))
+            label.setStyleSheet("color: #cccccc;")
+            label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+
+        header_layout.addWidget(original_label)
+        header_layout.addWidget(transformed_label)
+        layout.addLayout(header_layout)
+
+        # Text areas
         split_layout = QHBoxLayout()
-        button_layout = QHBoxLayout()
 
-        split_layout.addWidget(self.editor)
-        split_layout.addWidget(self.preview)
+        self.original_edit = QTextEdit()
+        self.original_edit.setReadOnly(True)
+        self.original_edit.setPlainText(self.original_text)
 
-        self.apply_btn = QPushButton("✅ Apply")
-        self.cancel_btn = QPushButton("❌ Cancel")
-        self.revert_btn = QPushButton("🔄 Revert")
-        self.transform_btn = QPushButton("🧪 Apply Transformation")
+        self.transformed_edit = QTextEdit()
+        self.transformed_edit.setPlainText(self.transformed_text)
 
-        self.apply_btn.clicked.connect(self.apply)
-        self.cancel_btn.clicked.connect(self.reject)
-        self.revert_btn.clicked.connect(self.revert)
-        self.transform_btn.clicked.connect(self.update_preview)
+        for editor in (self.original_edit, self.transformed_edit):
+            editor.setStyleSheet("""
+                QTextEdit {
+                    background-color: #1e1e1e;
+                    color: #f0f0f0;
+                    border: 1px solid #444;
+                    border-radius: 10px;
+                    padding: 10px;
+                    font-family: 'Fira Code', 'Consolas', monospace;
+                    font-size: 14px;
+                }
+            """)
+            editor.setMinimumWidth(280)
 
-        button_layout.addStretch()
-        button_layout.addWidget(self.revert_btn)
-        button_layout.addWidget(self.transform_btn)
-        button_layout.addWidget(self.cancel_btn)
-        button_layout.addWidget(self.apply_btn)
+        split_layout.addWidget(self.original_edit)
+        split_layout.addWidget(self.transformed_edit)
 
-        main_layout.addLayout(split_layout)
-        main_layout.addLayout(button_layout)
-        self.setLayout(main_layout)
+        layout.addLayout(split_layout)
 
-        self.update_preview()
-
-        self.setStyleSheet("""
-            QTextEdit {
-                font-family: Consolas, monospace;
-                font-size: 13px;
-                background-color: #1e1e1e;
-                color: #eeeeee;
-                border: 1px solid #444;
-                border-radius: 4px;
-                padding: 6px;
-            }
+        # Apply Button
+        apply_button = QPushButton("✅ Apply")
+        apply_button.setFixedSize(120, 36)
+        apply_button.clicked.connect(self.apply)
+        apply_button.setStyleSheet("""
             QPushButton {
-                padding: 8px 14px;
-                font-size: 13px;
+                background-color: #4CAF50;
+                color: white;
                 font-weight: bold;
-                border-radius: 6px;
+                font-size: 14px;
+                border-radius: 8px;
+                padding: 8px 16px;
+            }
+            QPushButton:hover {
+                background-color: #45a049;
             }
         """)
 
-    def update_preview(self):
-        edited = self.editor.toPlainText()
-        transformed = self.transform_fn(edited)
-        rendered_html = markdown.markdown(transformed)
-        self.preview.setHtml(rendered_html)
+        layout.addWidget(apply_button, alignment=Qt.AlignRight)
 
-    def revert(self):
-        self.editor.setText(self.original_text)
-        self.update_preview()
+        # Optional window styling
+        self.setStyleSheet("""
+            QDialog {
+                background-color: #2b2b2b;
+                color: #ffffff;
+            }
+        """)
 
     def apply(self):
-        final_text = self.transform_fn(self.editor.toPlainText())
-        self.callback(final_text)
+        final_text = self.transformed_edit.toPlainText()
+        if self.callback:
+            self.callback(final_text)
         self.accept()
+
+    def get_transformed_text(self):
+        return self.transformed_edit.toPlainText()
