@@ -1,152 +1,152 @@
 [
   {
-    "text": "button_layout.setSpacing(4)     ",
+    "text": "# Style the item widget like a card\nitem_widget.setStyleSheet(\"\"\"\n    background-color: #2e2e2e;\n    border-radius: 8px;\n    border: 1px solid #444;\n\"\"\")\n\n# Create a QListWidgetItem\nlist_item = QListWidgetItem()\n\n# Add vertical spacing between list items by increasing the item height\nsize = item_widget.sizeHint()\nlist_item.setSizeHint(QSize(size.width(), size.height() + 12))  # \ud83d\udc48 this creates vertical space\n\n# Add item to list and set its widget\nself.list_widget.addItem(list_item)\nself.list_widget.setItemWidget(list_item, item_widget)\n",
     "type": "text",
-    "timestamp": "2025-04-16 16:40:16"
+    "timestamp": "2025-04-23 19:24:51"
   },
   {
-    "text": "def update_list(self):\n    self.list_widget.clear()\n    for item in self.history:\n        content_type = item.get(\"type\", \"text\")\n        icon_map = {\n            \"text\": \"\ud83d\udcdd\", \"image\": \"\ud83d\uddbc\ufe0f\", \"video\": \"\ud83c\udfa5\", \"audio\": \"\ud83c\udfb5\",\n            \"file\": \"\ud83d\udcc1\", \"link\": \"\ud83d\udd17\", \"code\": \"\ud83d\udcbb\",\n            \"email\": \"\ud83d\udce7\", \"phone\": \"\ud83d\udcde\",\n        }\n        icon = icon_map.get(content_type, \"\ud83d\udccb\")\n        text = item.get(\"text\", \"\")\n        snippet = text[:60]\n        timestamp = item.get(\"timestamp\") or \"Unknown time\"\n\n        # Main widget\n        item_widget = QWidget()\n        layout = QVBoxLayout(item_widget)\n        layout.setContentsMargins(10, 6, 10, 6)\n\n        # Labels\n        text_label = QLabel(f\"{icon} {snippet}\" + (\"...\" if len(text) > 60 else \"\"))\n        text_label.setStyleSheet(\"font-weight: bold;\")\n        timestamp_label = QLabel(f\"{content_type.upper()} \u2022 {timestamp}\")\n        timestamp_label.setStyleSheet(\"color: #888; font-size: 11px;\")\n\n        layout.addWidget(text_label)\n        layout.addWidget(timestamp_label)\n\n        # \ud83d\udc49 Button layout\n        button_layout = QHBoxLayout()\n        layout.addLayout(button_layout)\n\n        # \ud83d\udc49 Define add_btn helper function inside update_list\n        def add_btn(emoji, tooltip, handler, text, color=\"#3a3a3a\"):\n            btn = QPushButton(emoji)\n            btn.setToolTip(tooltip)\n            btn.setFixedSize(30, 24)\n            btn.clicked.connect(lambda _, t=text: handler(t))\n            btn.setStyleSheet(f\"\"\"\n                QPushButton {{\n                    background-color: {color};\n                    color: white;\n                    font-weight: bold;\n                    border: none;\n                    border-radius: 6px;\n                }}\n                QPushButton:hover {{\n                    background-color: #5a5a5a;\n                }}\n            \"\"\")\n            button_layout.addWidget(btn)\n\n        # \ud83d\udc49 Add buttons\n        add_btn(\"\u270f\", \"Edit & Paste\", self.handle_edit, text, \"#4285F4\")\n        add_btn(\"\ud83d\udd20\", \"UPPERCASE\", lambda t: self.handle_transform(t.upper()), text, \"#34A853\")\n        add_btn(\"\ud83d\udd21\", \"lowercase\", lambda t: self.handle_transform(t.lower()), text, \"#34A853\")\n        add_btn(\"\ud83e\uddf9\", \"Strip\", lambda t: self.handle_transform(t.strip()), text, \"#FBBC05\")\n        add_btn(\"\ud83d\udebf\", \"Clean\", lambda t: self.handle_transform(re.sub(r'\\s+', ' ', t).strip()), text, \"#EA4335\")\n\n        # Add to QListWidget\n        list_item = QListWidgetItem()\n        list_item.setSizeHint(item_widget.sizeHint())\n        self.list_widget.addItem(list_item)\n        self.list_widget.setItemWidget(list_item, item_widget)\n",
+    "text": "update_list()",
+    "type": "text",
+    "timestamp": "2025-04-23 19:24:35"
+  },
+  {
+    "text": "list_item.setSizeHint(item_widget.sizeHint())\n",
+    "type": "text",
+    "timestamp": "2025-04-23 19:23:17"
+  },
+  {
+    "text": "size = item_widget.sizeHint()\nlist_item.setSizeHint(QSize(size.width(), size.height() + 12))  # \u2b05\ufe0f Add vertical space",
+    "type": "text",
+    "timestamp": "2025-04-23 19:22:21"
+  },
+  {
+    "text": "size = item_widget.sizeHint()\nlist_item.setSizeHint(QSize(size.width(), size.height() + 12))  # \u2b05\ufe0f Add vertical space\n",
+    "type": "text",
+    "timestamp": "2025-04-23 19:19:07"
+  },
+  {
+    "text": "size = item_widget.sizeHint()\nlist_item.setSizeHint(QSize(size.width(), size.height() + 12))  # \u2b05\ufe0f Add vertical space\n",
+    "type": "text",
+    "timestamp": "2025-04-23 19:18:46"
+  },
+  {
+    "text": "list_item.setSizeHint(item_widget.sizeHint())\n",
+    "type": "text",
+    "timestamp": "2025-04-23 19:18:35"
+  },
+  {
+    "text": "import re\nfrom PyQt5.QtWidgets import (\n    QWidget, QVBoxLayout, QLineEdit, QListWidget, QListWidgetItem,\n    QInputDialog, QMenu, QDialog, QLabel  # \ud83d\udc48 add QDialog here\n)\n\nfrom PyQt5.QtCore import Qt\nfrom transform_preview import TransformPreviewDialog\nfrom preview_transform_dialog import PreviewTransformDialog\nfrom PyQt5.QtCore import Qt\nfrom PyQt5.QtWidgets import QPushButton, QHBoxLayout\n\nfrom PyQt5.QtWidgets import QPushButton, QHBoxLayout\nfrom PyQt5.QtGui import QIcon\nfrom PyQt5.QtCore import QSize\n\n\nclass SearchWindow(QWidget):\n    def __init__(self, history, on_item_selected):\n        super().__init__()\n        self.setWindowTitle(\"KlipFusion Search Clipboard History\")\n        # self.setGeometry(500, 300, 500, 400)\n        self.resize(600, 600)  # width, height\n\n\n        self.history = history\n        self.on_item_selected = on_item_selected\n\n        layout = QVBoxLayout()\n\n        self.search_box = QLineEdit()\n        self.search_box.setPlaceholderText(\"Search...\")\n        self.search_box.textChanged.connect(self.filter_history)\n\n        self.list_widget = QListWidget()\n        self.list_widget.itemClicked.connect(self.item_clicked)\n        self.list_widget.setContextMenuPolicy(Qt.CustomContextMenu)\n        self.list_widget.customContextMenuRequested.connect(self.show_context_menu)\n\n        layout.addWidget(self.search_box)\n        layout.addWidget(self.list_widget)\n        self.setLayout(layout)\n\n        self.update_list()\n\n        self.setStyleSheet(\"\"\"\n            QWidget {\n                background-color: #1e1e1e;\n                color: #ffffff;\n                font-family: 'Segoe UI', 'Ubuntu', sans-serif;\n                font-size: 14px;\n            }\n\n            QLineEdit {\n                padding: 8px;\n                border: 1px solid #444;\n                border-radius: 6px;\n                background-color: #2e2e2e;\n                color: white;\n            }\n\n            QListWidget {\n                background-color: #2a2a2a;\n                border: 1px solid #444;\n                border-radius: 6px;\n            }\n\n            QListWidget::item {\n                padding: 2px;\n            }\n\n            QListWidget::item:selected {\n                background-color: #3e8e41;\n                color: white;\n            }\n            QPushButton {\n                background-color: #3a3a3a;\n                color: white;\n                font-weight: bold;\n                border: none;\n                border-radius: 6px;\n                padding: 4px;\n            }\n\n            QPushButton:hover {\n                background-color: #5a5a5a;\n            }\n\n            QPushButton:pressed {\n                background-color: #2e7031;\n            }\n\n        \"\"\")\n\n\n    def handle_transform(self, transformed):\n        dialog = TransformPreviewDialog(\"\", transformed, self)\n        if dialog.exec_() == QDialog.Accepted:\n            final = dialog.get_transformed_text()\n            if self.on_item_selected:\n                self.on_item_selected(final)\n            self.close()\n\n    def handle_edit(self, original):\n        edited, ok = QInputDialog.getMultiLineText(self, \"Edit Text\", \"Modify the text:\", original)\n        if ok and edited.strip():\n            if self.on_item_selected:\n                self.on_item_selected(edited.strip())\n            self.close()\n\n\n    def update_list(self):\n        self.list_widget.clear()\n        for item in self.history:\n            content_type = item.get(\"type\", \"text\")\n            icon_map = {\n                \"text\": \"\ud83d\udcdd\", \"image\": \"\ud83d\uddbc\ufe0f\", \"video\": \"\ud83c\udfa5\", \"audio\": \"\ud83c\udfb5\",\n                \"file\": \"\ud83d\udcc1\", \"link\": \"\ud83d\udd17\", \"code\": \"\ud83d\udcbb\",\n                \"email\": \"\ud83d\udce7\", \"phone\": \"\ud83d\udcde\",\n            }\n            icon = icon_map.get(content_type, \"\ud83d\udccb\")\n            text = item.get(\"text\", \"\")\n            snippet = text[:60]\n            timestamp = item.get(\"timestamp\") or \"Unknown time\"\n\n            # Main widget\n            item_widget = QWidget()\n            main_layout = QVBoxLayout(item_widget)\n            main_layout.setContentsMargins(10, 6, 10, 6)\n\n            layout = QVBoxLayout(item_widget)\n            layout.setContentsMargins(80, 8, 10, 12)  # \ud83d\udca1 Add bottom margin for spacing\n            layout.setSpacing(4)  # \ud83d\udca1 Space between label and timestamp/buttons\n\n            # Text + Timestamp stacked vertically\n            label_layout = QVBoxLayout()\n            label_layout.setSpacing(2)\n\n            text_label = QLabel(f\"{icon} {snippet}\" + (\"...\" if len(text) > 60 else \"\"))\n            text_label.setStyleSheet(\"font-weight: bold;\")\n\n            timestamp_label = QLabel(f\"{content_type.upper()} \u2022 {timestamp}\")\n            timestamp_label.setStyleSheet(\"color: #888; font-size: 11px;\")\n\n            label_layout.addWidget(text_label)\n            label_layout.addWidget(timestamp_label)\n\n            # Button layout (inline left-aligned)\n            button_layout = QHBoxLayout()\n            button_layout.setSpacing(18)\n            button_layout.setContentsMargins(0, 0, 0, 0)\n            button_layout.setAlignment(Qt.AlignLeft)\n\n            # Add buttons\n            def add_btn(icon_path, tooltip, handler, text, color=\"#3a3a3a\"):\n                btn = QPushButton()\n                btn.setIcon(QIcon(icon_path))\n                btn.setIconSize(QSize(20, 20))  # \u2705 Correct\n            # Adjust icon size as needed\n                btn.setToolTip(tooltip)\n                btn.setFixedSize(32, 28)\n                btn.clicked.connect(lambda _, t=text: handler(t))\n                btn.setStyleSheet(f\"\"\"\n                    QPushButton {{\n                        background-color: transparent;\n                        border: .5px solid white;\n                        border-radius: 4px;\n                    }}\n                    QPushButton:hover {{\n                        background-color: #5a5a5a;\n                    }}\n                \"\"\")\n                button_layout.addWidget(btn)\n\n            add_btn(\"icons/pen.png\", \"Edit & Paste\", self.handle_edit, text, \"#4285F4\")\n            add_btn(\"icons/uppercase-interface-button.png\", \"UPPERCASE\", lambda t: self.handle_transform(t.upper()), text, \"#34A853\")\n            add_btn(\"icons/lowercase-interface-symbol.png\", \"lowercase\", lambda t: self.handle_transform(t.lower()), text, \"#34A853\")\n            add_btn(\"icons/strip.png\", \"Strip\", lambda t: self.handle_transform(t.strip()), text, \"#FBBC05\")\n            add_btn(\"icons/clean.png\", \"Clean\", lambda t: self.handle_transform(re.sub(r'\\s+', ' ', t).strip()), text, \"#EA4335\")\n\n\n            # Add all to main layout\n            main_layout.addLayout(label_layout)\n            main_layout.addLayout(button_layout)\n\n            # Final wrap\n            list_item = QListWidgetItem()\n            list_item.setSizeHint(item_widget.sizeHint())\n            self.list_widget.addItem(list_item)\n            self.list_widget.setItemWidget(list_item, item_widget)\n\n\n\n\n        \n    def filter_history(self, text):\n        self.list_widget.clear()\n        for item in self.history:\n            full_text = item.get(\"text\", \"\")\n            if text.lower() in full_text.lower():\n                content_type = item.get(\"type\", \"text\")\n                snippet = full_text[:60]\n                display_text = f\"[{content_type.upper()}] {snippet}\" + (\"...\" if len(full_text) > 60 else \"\")\n                list_item = QListWidgetItem(display_text)\n                list_item.setData(Qt.UserRole, full_text)\n                self.list_widget.addItem(list_item)\n\n    def item_clicked(self, item):\n        if self.on_item_selected:\n            self.on_item_selected(item.data(Qt.UserRole))\n        self.close()\n\n    def show_context_menu(self, position):\n        selected_item = self.list_widget.itemAt(position)\n        if not selected_item:\n            return\n\n        original = selected_item.data(Qt.UserRole)\n        if original is None:\n            # Fallback to text content if no data was set\n            original = selected_item.text()\n        original = original or \"\"\n\n\n        menu = QMenu()\n        menu = QMenu()\n\n        edit_action = menu.addAction(\"\u270f\ufe0f Edit & Paste\")\n        upper_action = menu.addAction(\"\ud83d\udd20 UPPERCASE\")\n        lower_action = menu.addAction(\"\ud83d\udd21 lowercase\")\n        strip_action = menu.addAction(\"\ud83e\uddf9 Strip whitespace\")\n        clean_action = menu.addAction(\"\ud83d\udebf Remove formatting\")\n\n        action = menu.exec_(self.list_widget.viewport().mapToGlobal(position))\n\n        if not action:\n            return\n\n        transformed = original\n\n        if action == edit_action:\n            edited, ok = QInputDialog.getMultiLineText(self, \"Edit Text\", \"Modify the text:\", original)\n            if ok and edited.strip():\n                transformed = edited.strip()\n            else:\n                return\n        elif action == upper_action:\n            transformed = (original or \"\").upper()\n\n        elif action == lower_action:\n            transformed = original.lower()\n        elif action == strip_action:\n            transformed = original.strip()\n        elif action == clean_action:\n            transformed = re.sub(r'\\s+', ' ', original).strip()\n    \n\n        if action != edit_action:\n            dialog = TransformPreviewDialog(original, transformed, self)\n            if dialog.exec_() != QDialog.Accepted:\n                return\n            transformed = dialog.get_transformed_text()\n            \n\n        if self.on_item_selected and transformed:\n            self.on_item_selected(transformed)\n        self.close()\n\n\n\n    \n        \n",
     "type": "code",
-    "timestamp": "2025-04-16 16:39:26"
+    "timestamp": "2025-04-23 19:17:57"
   },
   {
-    "text": "add_btn(\"\u270f\ufe0f\", \"Edit & Paste\", self.handle_edit, \"#4285F4\")  # Blue\nadd_btn(\"\ud83d\udd20\", \"UPPERCASE\", lambda t: self.handle_transform(t.upper()), \"#34A853\")  # Green\nadd_btn(\"\ud83d\udd21\", \"lowercase\", lambda t: self.handle_transform(t.lower()), \"#34A853\")\nadd_btn(\"\ud83e\uddf9\", \"Strip\", lambda t: self.handle_transform(t.strip()), \"#FBBC05\")  # Yellow\nadd_btn(\"\ud83d\udebf\", \"Clean\", lambda t: self.handle_transform(re.sub(r'\\s+', ' ', t).strip()), \"#EA4335\")  # Red\n",
+    "text": "layout = QVBoxLayout(item_widget)\nlayout.setContentsMargins(10, 8, 10, 12)  # \ud83d\udca1 Add bottom margin for spacing\nlayout.setSpacing(4)  # \ud83d\udca1 Space between label and timestamp/buttons",
     "type": "text",
-    "timestamp": "2025-04-16 16:30:23"
+    "timestamp": "2025-04-23 19:16:21"
   },
   {
-    "text": "QPushButton {\n    background-color: #3a3a3a;\n    color: white;\n    font-weight: bold;\n    border: none;\n    border-radius: 6px;\n    padding: 4px;\n}\n\nQPushButton:hover {\n    background-color: #5a5a5a;\n}\n\nQPushButton:pressed {\n    background-color: #2e7031;\n}\n",
+    "text": "layout = QVBoxLayout(item_widget)\nlayout.setContentsMargins(10, 8, 10, 12)  # \ud83d\udca1 Add bottom margin for spacing\nlayout.setSpacing(4)  # \ud83d\udca1 Space between label and timestamp/buttons",
     "type": "text",
-    "timestamp": "2025-04-16 16:29:30"
+    "timestamp": "2025-04-23 19:13:14"
   },
   {
-    "text": "self.setStyleSheet",
+    "text": "layout = QVBoxLayout(item_widget)",
     "type": "text",
-    "timestamp": "2025-04-16 16:29:21"
+    "timestamp": "2025-04-23 19:13:00"
   },
   {
-    "text": "\n    from PyQt5.QtWidgets import QPushButton, QHBoxLayout",
+    "text": "layout.setContentsMargins",
+    "type": "text",
+    "timestamp": "2025-04-23 19:12:28"
+  },
+  {
+    "text": "background-color: #2a2a2a;",
+    "type": "text",
+    "timestamp": "2025-04-23 19:10:37"
+  },
+  {
+    "text": "background-color: #2a2a2a;",
+    "type": "text",
+    "timestamp": "2025-04-23 19:05:13"
+  },
+  {
+    "text": "icons/uppercase-interface-symbol.png",
+    "type": "text",
+    "timestamp": "2025-04-23 19:04:55"
+  },
+  {
+    "text": "icons/uppercase-interface-symbol.png",
+    "type": "text",
+    "timestamp": "2025-04-23 11:46:02"
+  },
+  {
+    "text": "5a5a5a",
+    "type": "text",
+    "timestamp": "2025-04-23 11:44:30"
+  },
+  {
+    "text": "5a5a5a",
+    "type": "text",
+    "timestamp": "2025-04-23 11:41:32"
+  },
+  {
+    "text": "icons/uppercase-interface-symbol.png",
+    "type": "text",
+    "timestamp": "2025-04-23 11:19:29"
+  },
+  {
+    "text": "icons/uppercase-interface-symbol.png",
+    "type": "text",
+    "timestamp": "2025-04-23 11:18:04"
+  },
+  {
+    "text": "btn.setIconSize(QSize(20, 20))  # \u2705 Correct\n",
+    "type": "text",
+    "timestamp": "2025-04-23 11:16:55"
+  },
+  {
+    "text": "/home/guest/Desktop/dreamache/KlipFusionApp/smart-clip-board/search_window.py",
+    "type": "file_path",
+    "timestamp": "2025-04-23 11:13:55"
+  },
+  {
+    "text": "from PyQt5.QtGui import QIcon\nfrom PyQt5.QtCore import QSize\n\ndef add_btn(icon_path, tooltip, handler, text, color=\"#3a3a3a\"):\n    btn = QPushButton()\n    btn.setIcon(QIcon(icon_path))\n    btn.setIconSize(QSize(24, 24))\n    btn.setToolTip(tooltip)\n    btn.setFixedSize(32, 28)\n    btn.clicked.connect(lambda _, t=text: handler(t))\n    btn.setStyleSheet(f\"\"\"\n        QPushButton {{\n            background-color: {color};\n            border: none;\n            border-radius: 4px;\n        }}\n        QPushButton:hover {{\n            background-color: #5a5a5a;\n        }}\n    \"\"\")\n    button_layout.addWidget(btn)\n",
     "type": "code",
-    "timestamp": "2025-04-16 16:27:40"
+    "timestamp": "2025-04-23 11:13:40"
   },
   {
-    "text": "\n    from PyQt5.QtWidgets import QPushButton, QHBoxLayout",
+    "text": "add_btn(\"icons/edit.png\", \"Edit & Paste\", self.handle_edit, text, \"#4285F4\")\nadd_btn(\"icons/uppercase.png\", \"UPPERCASE\", lambda t: self.handle_transform(t.upper()), text, \"#34A853\")\nadd_btn(\"icons/lowercase.png\", \"lowercase\", lambda t: self.handle_transform(t.lower()), text, \"#34A853\")\nadd_btn(\"icons/strip.png\", \"Strip\", lambda t: self.handle_transform(t.strip()), text, \"#FBBC05\")\nadd_btn(\"icons/clean.png\", \"Clean\", lambda t: self.handle_transform(re.sub(r'\\s+', ' ', t).strip()), text, \"#EA4335\")\n",
+    "type": "text",
+    "timestamp": "2025-04-23 11:10:08"
+  },
+  {
+    "text": "from PyQt5.QtGui import QIcon\nfrom PyQt5.QtCore import QSize\n",
     "type": "code",
-    "timestamp": "2025-04-16 16:27:21"
+    "timestamp": "2025-04-23 11:09:39"
   },
   {
-    "text": "def handle_transform(self, transformed):\n    dialog = TransformPreviewDialog(\"\", transformed, self)\n    if dialog.exec_() == QDialog.Accepted:\n        final = dialog.get_transformed_text()\n        if self.on_item_selected:\n            self.on_item_selected(final)\n        self.close()\n\ndef handle_edit(self, original):\n    edited, ok = QInputDialog.getMultiLineText(self, \"Edit Text\", \"Modify the text:\", original)\n    if ok and edited.strip():\n        if self.on_item_selected:\n            self.on_item_selected(edited.strip())\n        self.close()\n",
+    "text": "def add_btn(icon_path, tooltip, handler, text, color=\"#3a3a3a\"):\n    btn = QPushButton()\n    btn.setIcon(QIcon(icon_path))\n    btn.setIconSize(Qt.QSize(20, 20))  # Adjust icon size as needed\n    btn.setToolTip(tooltip)\n    btn.setFixedSize(32, 28)\n    btn.clicked.connect(lambda _, t=text: handler(t))\n    btn.setStyleSheet(f\"\"\"\n        QPushButton {{\n            background-color: {color};\n            border: none;\n            border-radius: 4px;\n        }}\n        QPushButton:hover {{\n            background-color: #5a5a5a;\n        }}\n    \"\"\")\n    button_layout.addWidget(btn)",
     "type": "code",
-    "timestamp": "2025-04-16 16:26:50"
+    "timestamp": "2025-04-23 11:09:04"
   },
   {
-    "text": "def handle_transform(self, transformed):\n    dialog = TransformPreviewDialog(\"\", transformed, self)\n    if dialog.exec_() == QDialog.Accepted:\n        final = dialog.get_transformed_text()\n        if self.on_item_selected:\n            self.on_item_selected(final)\n        self.close()\n\ndef handle_edit(self, original):\n    edited, ok = QInputDialog.getMultiLineText(self, \"Edit Text\", \"Modify the text:\", original)\n    if ok and edited.strip():\n        if self.on_item_selected:\n            self.on_item_selected(edited.strip())\n        self.close()",
-    "type": "code",
-    "timestamp": "2025-04-16 16:26:49"
-  },
-  {
-    "text": "SearchWindow",
+    "text": "#5a5a5a",
     "type": "text",
-    "timestamp": "2025-04-16 16:26:33"
+    "timestamp": "2025-04-23 11:08:26"
   },
   {
-    "text": "from PyQt5.QtWidgets import QPushButton, QHBoxLayout",
-    "type": "code",
-    "timestamp": "2025-04-16 16:26:14"
-  },
-  {
-    "text": "from PyQt5.QtWidgets import QPushButton, QHBoxLayout\n\ndef update_list(self):\n    self.list_widget.clear()\n    for item in self.history:\n        content_type = item.get(\"type\", \"text\")\n        icon_map = {\n            \"text\": \"\ud83d\udcdd\", \"image\": \"\ud83d\uddbc\ufe0f\", \"video\": \"\ud83c\udfa5\", \"audio\": \"\ud83c\udfb5\",\n            \"file\": \"\ud83d\udcc1\", \"link\": \"\ud83d\udd17\", \"code\": \"\ud83d\udcbb\", \"email\": \"\ud83d\udce7\", \"phone\": \"\ud83d\udcde\"\n        }\n        icon = icon_map.get(content_type, \"\ud83d\udccb\")\n        text_snippet = item.get(\"text\", \"\")[:60]\n        full_text = item.get(\"text\", \"\")\n        raw_timestamp = item.get(\"timestamp\")\n        timestamp = raw_timestamp if raw_timestamp else \"Unknown time\"\n\n        # \ud83e\uddf1 Item Widget\n        item_widget = QWidget()\n        main_layout = QVBoxLayout(item_widget)\n        main_layout.setContentsMargins(10, 6, 10, 6)\n\n        # \ud83d\udcdd Text and timestamp\n        text_label = QLabel(f\"{icon} {text_snippet}\" + (\"...\" if len(full_text) > 60 else \"\"))\n        text_label.setStyleSheet(\"font-weight: bold;\")\n\n        timestamp_label = QLabel(f\"{content_type.upper()} \u2022 {timestamp}\")\n        timestamp_label.setStyleSheet(\"color: #888; font-size: 11px;\")\n\n        main_layout.addWidget(text_label)\n        main_layout.addWidget(timestamp_label)\n\n        # \ud83c\udf9b\ufe0f Action Buttons\n        button_layout = QHBoxLayout()\n\n        def add_btn(emoji, tooltip, handler):\n            btn = QPushButton(emoji)\n            btn.setToolTip(tooltip)\n            btn.setFixedSize(30, 24)\n            btn.clicked.connect(lambda _, text=full_text: handler(text))\n            button_layout.addWidget(btn)\n\n        add_btn(\"\u270f\ufe0f\", \"Edit & Paste\", self.handle_edit)\n        add_btn(\"\ud83d\udd20\", \"UPPERCASE\", lambda t: self.handle_transform(t.upper()))\n        add_btn(\"\ud83d\udd21\", \"lowercase\", lambda t: self.handle_transform(t.lower()))\n        add_btn(\"\ud83e\uddf9\", \"Strip\", lambda t: self.handle_transform(t.strip()))\n        add_btn(\"\ud83d\udebf\", \"Clean\", lambda t: self.handle_transform(re.sub(r'\\s+', ' ', t).strip()))\n\n        main_layout.addLayout(button_layout)\n\n        # \ud83d\udccb Add to ListWidget\n        list_item = QListWidgetItem()\n        list_item.setSizeHint(item_widget.sizeHint())\n        self.list_widget.addItem(list_item)\n        self.list_widget.setItemWidget(list_item, item_widget)\n",
-    "type": "code",
-    "timestamp": "2025-04-16 16:25:16"
-  },
-  {
-    "text": " menu = QMenu()",
+    "text": " strip()",
     "type": "text",
-    "timestamp": "2025-04-16 16:22:38"
+    "timestamp": "2025-04-23 10:58:28"
   },
   {
-    "text": " menu = QMenu()",
+    "text": "file:///home/guest/Downloads/lowercase-interface-symbol.png",
     "type": "text",
-    "timestamp": "2025-04-16 16:21:35"
+    "timestamp": "2025-04-23 10:56:53"
   },
   {
-    "text": "fancy_action = menu.addAction(\"\ud83e\ude84 Fancy Preview\")",
+    "text": "file:///home/guest/Downloads/uppercase-interface-button.png",
     "type": "text",
-    "timestamp": "2025-04-16 16:21:12"
-  },
-  {
-    "text": "guest@debian:~/Desktop/dreamache/KlipFusionApp/smart-clip-board$ python main.py\nelvo",
-    "type": "text",
-    "timestamp": "2025-04-16 16:19:25"
-  },
-  {
-    "text": "guest@debian:~/Desktop/dreamache/KlipFusionApp/smart-clip-board$ python main.py\n",
-    "type": "text",
-    "timestamp": "2025-04-16 16:18:54"
-  },
-  {
-    "text": " background-color: #4CAF50;\n            color: white;\n            font-weight: bold;\n            font-size: 14px;\n            border-radius: 8px;\n            padding: 8px 16px;\ndisplay flex",
-    "type": "text",
-    "timestamp": "2025-04-16 16:18:02"
-  },
-  {
-    "text": "guest@debian:~/Desktop/dreamache/KlipFusionApp/smart-clip-board$ python main.py\nelvis",
-    "type": "text",
-    "timestamp": "2025-04-16 16:15:26"
-  },
-  {
-    "text": "guest@debian:~/Desktop/dreamache/KlipFusionApp/smart-clip-board$ python main.py\n",
-    "type": "text",
-    "timestamp": "2025-04-16 16:14:39"
-  },
-  {
-    "text": " background-color: #4CAF50;\n            color: white;\n            font-weight: bold;\n            font-size: 14px;\n            border-radius: 8px;\n            padding: 8px 16px;\ndisplay flex",
-    "type": "text",
-    "timestamp": "2025-04-16 16:13:50"
-  },
-  {
-    "text": "background-color: #4CAF50; color: white; font-weight: bold; font-size: 14px; border-radius: 8px; padding: 8px 16px;",
-    "type": "text",
-    "timestamp": "2025-04-16 16:13:11"
-  },
-  {
-    "text": " background-color: #4CAF50;\n            color: white;\n            font-weight: bold;\n            font-size: 14px;\n            border-radius: 8px;\n            padding: 8px 16px;\ndisplay flex",
-    "type": "text",
-    "timestamp": "2025-04-16 16:13:07"
-  },
-  {
-    "text": " background-color: #4CAF50;\n            color: white;\n            font-weight: bold;\n            font-size: 14px;\n            border-radius: 8px;\n            padding: 8px 16px;",
-    "type": "text",
-    "timestamp": "2025-04-16 16:12:35"
-  },
-  {
-    "text": " background-color: #4CAF50;\n            color: white;\n            font-weight: bold;\n            font-size: 14px;\n            border-radius: 8px;\n            padding: 8px 16px;\n            display: flex;",
-    "type": "text",
-    "timestamp": "2025-04-16 16:12:02"
-  },
-  {
-    "text": " background-color: #4CAF50;\n            color: white;\n            font-weight: bold;\n            font-size: 14px;\n            border-radius: 8px;\n            padding: 8px 16px;",
-    "type": "text",
-    "timestamp": "2025-04-16 16:11:13"
-  },
-  {
-    "text": "from PyQt5.QtWidgets import (\n    QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton, QLabel, QDialog, QSizePolicy\n)\nfrom PyQt5.QtGui import QFont, QPalette, QColor\nfrom PyQt5.QtCore import Qt wsw",
-    "type": "code",
-    "timestamp": "2025-04-16 16:10:54"
-  },
-  {
-    "text": "from PyQt5.QtWidgets import (\n    QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton, QLabel, QDialog, QSizePolicy\n)\nfrom PyQt5.QtGui import QFont, QPalette, QColor\nfrom PyQt5.QtCore import Qt",
-    "type": "code",
-    "timestamp": "2025-04-16 16:10:33"
-  },
-  {
-    "text": "from PyQt5.QtWidgets import (\n    QVBoxLayout, QHBoxLayout, QTextEdit, QPushButton, QLabel, QDialog, QSizePolicy\n)\nfrom PyQt5.QtGui import QFont, QPalette, QColor\nfrom PyQt5.QtCore import Qt",
-    "type": "code",
-    "timestamp": "2025-04-16 16:07:39"
-  },
-  {
-    "text": "def init_ui(self):\n    layout = QVBoxLayout(self)\n    layout.setContentsMargins(20, 20, 20, 20)\n    layout.setSpacing(15)\n\n    # Header labels\n    header_layout = QHBoxLayout()\n    original_label = QLabel(\"\ud83d\udcdd Original\")\n    transformed_label = QLabel(\"\u2728 Transformed\")\n\n    for label in (original_label, transformed_label):\n        label.setFont(QFont(\"Segoe UI\", 12, QFont.Bold))\n        label.setStyleSheet(\"color: #cccccc;\")\n        label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)\n\n    header_layout.addWidget(original_label)\n    header_layout.addWidget(transformed_label)\n    layout.addLayout(header_layout)\n\n    # Text areas\n    split_layout = QHBoxLayout()\n\n    self.original_edit = QTextEdit()\n    self.original_edit.setReadOnly(True)\n    self.original_edit.setPlainText(self.original_text)\n\n    self.transformed_edit = QTextEdit()\n    self.transformed_edit.setPlainText(self.transformed_text)\n\n    for editor in (self.original_edit, self.transformed_edit):\n        editor.setStyleSheet(\"\"\"\n            QTextEdit {\n                background-color: #1e1e1e;\n                color: #f0f0f0;\n                border: 1px solid #444;\n                border-radius: 10px;\n                padding: 10px;\n                font-family: 'Fira Code', 'Consolas', monospace;\n                font-size: 14px;\n            }\n        \"\"\")\n        editor.setMinimumWidth(280)\n\n    split_layout.addWidget(self.original_edit)\n    split_layout.addWidget(self.transformed_edit)\n\n    layout.addLayout(split_layout)\n\n    # Apply Button\n    apply_button = QPushButton(\"\u2705 Apply\")\n    apply_button.setFixedSize(120, 36)\n    apply_button.clicked.connect(self.apply)\n    apply_button.setStyleSheet(\"\"\"\n        QPushButton {\n            background-color: #4CAF50;\n            color: white;\n            font-weight: bold;\n            font-size: 14px;\n            border-radius: 8px;\n            padding: 8px 16px;\n        }\n        QPushButton:hover {\n            background-color: #45a049;\n        }\n    \"\"\")\n\n    layout.addWidget(apply_button, alignment=Qt.AlignRight)\n\n    # Optional window styling\n    self.setStyleSheet(\"\"\"\n        QDialog {\n            background-color: #2b2b2b;\n            color: #ffffff;\n        }\n    \"\"\")",
-    "type": "code",
-    "timestamp": "2025-04-16 16:06:56"
+    "timestamp": "2025-04-23 10:56:08"
   }
 ]

@@ -11,6 +11,9 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout
 
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QSize
+
 
 class SearchWindow(QWidget):
     def __init__(self, history, on_item_selected):
@@ -122,36 +125,46 @@ class SearchWindow(QWidget):
 
             # Main widget
             item_widget = QWidget()
-            layout = QVBoxLayout(item_widget)
-            layout.setContentsMargins(10, 6, 10, 6)
+            main_layout = QVBoxLayout(item_widget)
+            main_layout.setContentsMargins(10, 6, 10, 6)
 
-            # Labels
+            layout = QVBoxLayout(item_widget)
+            layout.setContentsMargins(80, 8, 10, 12)  # 💡 Add bottom margin for spacing
+            layout.setSpacing(4)  # 💡 Space between label and timestamp/buttons
+
+            # Text + Timestamp stacked vertically
+            label_layout = QVBoxLayout()
+            label_layout.setSpacing(2)
+
             text_label = QLabel(f"{icon} {snippet}" + ("..." if len(text) > 60 else ""))
             text_label.setStyleSheet("font-weight: bold;")
+
             timestamp_label = QLabel(f"{content_type.upper()} • {timestamp}")
             timestamp_label.setStyleSheet("color: #888; font-size: 11px;")
 
-            layout.addWidget(text_label)
-            layout.addWidget(timestamp_label)
+            label_layout.addWidget(text_label)
+            label_layout.addWidget(timestamp_label)
 
-            # 👉 Button layout
+            # Button layout (inline left-aligned)
             button_layout = QHBoxLayout()
-            layout.addLayout(button_layout)
+            button_layout.setSpacing(18)
+            button_layout.setContentsMargins(0, 0, 0, 0)
+            button_layout.setAlignment(Qt.AlignLeft)
 
-            # 👉 Define add_btn helper function inside update_list
-            def add_btn(emoji, tooltip, handler, text, color="#3a3a3a"):
-                btn = QPushButton(emoji)
+            # Add buttons
+            def add_btn(icon_path, tooltip, handler, text, color="#3a3a3a"):
+                btn = QPushButton()
+                btn.setIcon(QIcon(icon_path))
+                btn.setIconSize(QSize(20, 20))  # ✅ Correct
+            # Adjust icon size as needed
                 btn.setToolTip(tooltip)
-                btn.setFixedSize(30, 24)
+                btn.setFixedSize(32, 28)
                 btn.clicked.connect(lambda _, t=text: handler(t))
                 btn.setStyleSheet(f"""
                     QPushButton {{
-                        background-color: {color};
-                        color: white;
-                        font-weight: bold;
-                        border: none;
-                        border-radius: 2px;
-                        width: 10px;
+                        background-color: transparent;
+                        border: .5px solid white;
+                        border-radius: 4px;
                     }}
                     QPushButton:hover {{
                         background-color: #5a5a5a;
@@ -159,28 +172,47 @@ class SearchWindow(QWidget):
                 """)
                 button_layout.addWidget(btn)
 
-            # 👉 Add buttons
-            add_btn("✏", "Edit & Paste", self.handle_edit, text, "#4285F4")
-            add_btn("🔠", "UPPERCASE", lambda t: self.handle_transform(t.upper()), text, "#34A853")
-            add_btn("🔡", "lowercase", lambda t: self.handle_transform(t.lower()), text, "#34A853")
-            add_btn("🧹", "Strip", lambda t: self.handle_transform(t.strip()), text, "#FBBC05")
-            add_btn("🚿", "Clean", lambda t: self.handle_transform(re.sub(r'\s+', ' ', t).strip()), text, "#EA4335")
+            add_btn("icons/pen.png", "Edit & Paste", self.handle_edit, text, "#4285F4")
+            add_btn("icons/uppercase-interface-button.png", "UPPERCASE", lambda t: self.handle_transform(t.upper()), text, "#34A853")
+            add_btn("icons/lowercase-interface-symbol.png", "lowercase", lambda t: self.handle_transform(t.lower()), text, "#34A853")
+            add_btn("icons/strip.png", "Strip", lambda t: self.handle_transform(t.strip()), text, "#FBBC05")
+            add_btn("icons/clean.png", "Clean", lambda t: self.handle_transform(re.sub(r'\s+', ' ', t).strip()), text, "#EA4335")
 
-            # Add to QListWidget
+
+            # Add all to main layout
+            main_layout.addLayout(label_layout)
+            main_layout.addLayout(button_layout)
+
+            # Final wrap
             list_item = QListWidgetItem()
-            list_item.setSizeHint(item_widget.sizeHint())
+            size = item_widget.sizeHint()
+            list_item.setSizeHint(QSize(size.width(), size.height() + 12))  # ⬅️ Add vertical space
+
+            self.list_widget.addItem(list_item)
+            self.list_widget.setItemWidget(list_item, item_widget)
+
+            # Style the item widget like a card
+            item_widget.setStyleSheet("""
+                background-color: #2e2e2e;
+                border-radius: 8px;
+                border: 1px solid #444;
+            """)
+
+            # Create a QListWidgetItem
+            list_item = QListWidgetItem()
+
+            # Add vertical spacing between list items by increasing the item height
+            size = item_widget.sizeHint()
+            list_item.setSizeHint(QSize(size.width(), size.height() + 2))  # 👈 this creates vertical space
+
+            # Add item to list and set its widget
             self.list_widget.addItem(list_item)
             self.list_widget.setItemWidget(list_item, item_widget)
 
 
 
- 
-
-            
 
 
-         
-                
         
     def filter_history(self, text):
         self.list_widget.clear()
